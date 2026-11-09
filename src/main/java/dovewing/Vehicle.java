@@ -59,8 +59,13 @@ public final class Vehicle {
         return vehicleClass.deposit(deposit, renter.type());
     }
 
-    /** Only the Depot, in this package, may change status. Refuses if not available. */
+    /** The deposit this renter pays for this vehicle. */
     void markRented(Rental rental) {
+        Objects.requireNonNull(rental, "rental");
+        if (rental.vehicle() != this) {
+            throw new IllegalArgumentException(
+                    "That rental is for a different vehicle than " + model + " (" + reg + ")");
+        }
         if (!isAvailable()) {
             throw new IllegalStateException(model + " (" + reg + ") is not available");
         }
