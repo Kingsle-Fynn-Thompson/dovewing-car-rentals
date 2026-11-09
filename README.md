@@ -77,6 +77,18 @@ All fields are private and final where they can be. `Depot` returns read-only co
 of its lists. Constructors validate: blank names, missing values and rentals under
 1 day are refused instead of creating broken records.
 
+## What changed from my original sketch (and why)
+
+- **`Rental` has no status.** The sketch gave it a `RentalState`. While building
+  I saw that this recreated the original bug: a second copy of "is this car out?"
+  that could disagree with the vehicle. `Rental.isActive()` now asks the vehicle.
+- **`rent()` returns `Optional<Rental>`, not a `RentResult`.** A refusal is a normal
+  outcome, not an error, and `Optional` says "a rental, or none" without a
+  new type. `main` carries on exactly as the original did.
+- **`Vehicle` and `Renter` have no `id` field.** The original never printed or read
+  them, and their global counters were a weakness. Registration and object identity
+  replace them. Rental numbers are kept because the report prints them.
+
 ## Adding the commercial van
 
 With this design: one new file, a class implementing `VehicleClass` that overrides
